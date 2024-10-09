@@ -14,13 +14,30 @@ public class Program
     // event: the string event to process
     // x and y are passed by reference and are update in the routine
 
-    public static void updatePos(string e, ref int x, ref int y)
+    public static void updatePos(char e, ref int x, ref int y)
     {
 
         switch (e)
         {
-            case "a":
-                x = x - 1;
+            case 's':
+                y -= 1;
+                break;
+
+            case 'w':
+                y += 1;
+                break;
+
+            case 'a':
+                x -= 1;
+                break;
+
+            case 'd':
+                x += 1;
+                break;
+
+            case ' ':
+                x += 1;
+                y += 1;
                 break;
 
             // Task 1: 
@@ -35,6 +52,11 @@ public class Program
         // Use screenX and screenY
         Console.WriteLine("Compare [{0}, {1}] to [{2}, {3}]", x, y, screenX, screenY);
 
+        x = Math.Max(x, 0);
+        y = Math.Max(y, 0);
+
+        x = Math.Min(x, screenX);
+        y = Math.Min(y, screenY);
     }
 
     public static void Main()
@@ -56,13 +78,13 @@ public class Program
         // The loop exits when the user enters, for example, the event "x"
 
         // Testing with known cases
-        updatePos("a", ref x, ref y);
+        updatePos('a', ref x, ref y);
         Console.WriteLine("[{0}, {1}]", x, y);
 
 
         // Testing with user input
         Console.Write("Input: ");
-        string e = Console.ReadLine();
+        char e = Console.ReadKey().KeyChar;
         updatePos(e, ref x, ref y);
         Console.WriteLine("[{0}, {1}]", x, y);
 
