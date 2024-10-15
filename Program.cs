@@ -2,7 +2,6 @@
 
 public class Program
 {
-
     // Global values that can be used for validation
     // Initalised to the size of the screen
 
@@ -12,20 +11,22 @@ public class Program
     //
     // UpdatePos()
     // event: the string event to process
-    // x and y are passed by reference and are update in the routine
-
+    // x and y are passed by value and the updated values are returned in the same order they are provided
     public static (int, int) UpdatePosVal(char input, int x, int y)
     {
         // Pass the values as reference to UpdatePosRef
-        UpdatePosRef(input, ref x,  ref y);
+        UpdatePosRef(input, ref x, ref y);
 
         // Return the new position
         return (x, y);
     }
 
+    //
+    // UpdatePos()
+    // event: the string event to process
+    // x and y are passed by reference and are update in the routine
     public static void UpdatePosRef(char input, ref int x, ref int y)
     {
-
         switch (input)
         {
             case 's':
@@ -49,15 +50,15 @@ public class Program
                 y += 1;
                 break;
 
-            // Task 1: 
-            // Include other cases to cater for A W S D  and Space for jump
+            // Task 1:
+            // Include other cases to cater for A W S D and Space for jump
             default:
                 // ignore event
                 Console.WriteLine("That is not a valid move");
                 break;
         }
 
-        // Task 2: 
+        // Task 2:
         // Add in validation for x and y not going off the screen size
         // Use screenX and screenY
         // Console.WriteLine("Compare [{0}, {1}] to [{2}, {3}]", x, y, screenX, screenY);
@@ -65,7 +66,7 @@ public class Program
         // Limit x and y to the border of the screen
         int border_x = Math.Min(x, screenX);
         int border_y = Math.Min(y, screenY);
-        
+
         // Make sure x and y are not negative
         border_x = Math.Max(border_x, 0);
         border_y = Math.Max(border_y, 0);
@@ -84,10 +85,13 @@ public class Program
     public static void ReadUserInput(ref char input)
     {
         // Prompt the user for a valid move
-        Console.Write("Move: ");
+        Console.Write("Move: '");
 
         // Read the move into the char reference
         input = Console.ReadKey().KeyChar;
+
+        // Add signle commas around the input to differentiate between enter and space
+        Console.Write("'");
 
         // Add a newline so any further console writes are not merged
         Console.WriteLine();
@@ -97,13 +101,12 @@ public class Program
     {
         Console.WriteLine("Hello to Game World");
 
-
         // x and y cordinates
         // local variables, initialised to 0
         int x = 0;
         int y = 0;
 
-        // Task 3: 
+        // Task 3:
         // Test your code!
         // Write a loop which:
         //     Prompt the user to enter a string
@@ -119,14 +122,13 @@ public class Program
             // We are in testing mode
 
             // Test every valid key
-            char[] validKeys = { ' ', 'w', 'a', 's', 'd' };
+            char[] validKeys = [' ', 'w', 'a', 's', 'd'];
 
             foreach (char key in validKeys)
             {
                 UpdatePosRef(key, ref x, ref y);
                 Console.WriteLine("Position [{0}, {1}]", x, y);
             }
-
 
             // Testing with user input
             Console.Write("Input: ");
@@ -144,8 +146,11 @@ public class Program
         // Take in user input
         ReadUserInput(ref input);
 
-        // Loop until the user presses x
-        while (input != 'x') {
+        // Loop until the user presses an exit code
+        char[] exitCodes = ['x', 'q'];
+
+        while (!exitCodes.Contains(input))
+        {
             // Update user position based on their input
             UpdatePosRef(input, ref x, ref y);
 
@@ -156,22 +161,28 @@ public class Program
             ReadUserInput(ref input);
         }
 
-
-        // Extention:
+        // Extension:
         // Task 4: Modify the interface of updatePos () to return the new x and y values
         //         Note: you will have to change the call to and the definition of updatePos()
         // What style of interface is better????
-        // Call by reference or mutliple values?
-        while (input != 'x')
-        {
-            // Update user position based on their input
-            x,y = UpdatePosVal(input, x, y);
+        // Call by reference or multiple values?
 
-            // Output their new position
-            Console.WriteLine("Position: [{0}, {1}]", x, y);
+        // Comment this block out for value mode
+        // while (!exitCodes.Contains(input))
+        // {
+        //     // Update user position based on their input
+        //     (x, y) = UpdatePosVal(input, x, y);
 
-            // Take in user input
-            ReadUserInput(ref input);
-        }
+        //     // Output their new position
+        //     Console.WriteLine("Position: [{0}, {1}]", x, y);
+
+        //     // Take in user input
+        //     ReadUserInput(ref input);
+        // }
+
+        // I prefer references because its easier to pass more variables
+        // into a function rather than having to destructure a tuple or
+        // custom class/struct to retrieve the variables back.
+        // Also references are used heavily in Rust, and its convention to use them.
     }
 }
